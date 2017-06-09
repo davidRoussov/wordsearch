@@ -13,10 +13,10 @@ using namespace std;
 
 const int SCREEN_WIDTH = 800;
 const int SCREEN_HEIGHT = 800;
-const int GRID_SIZE = 10;
+const int GRID_SIZE = 20;
 const int GRID_PADDING = 100;
 const int GRID_UNIT_LENGTH = (SCREEN_WIDTH - GRID_PADDING * 2) / GRID_SIZE;
-const int NUMBER_SPECIAL_WORDS = 3;
+const int NUMBER_SPECIAL_WORDS = 10;
 
 SDL_Window* gWindow = NULL;
 SDL_Renderer* gRenderer = NULL;
@@ -130,7 +130,6 @@ int main(int argc, char *argv[])
 
         InitializeBoard *board_initializer = new InitializeBoard(NUMBER_SPECIAL_WORDS, GRID_SIZE);
         board = board_initializer->generate();
-        return 0;
 
 
 

@@ -10,8 +10,9 @@
         "random": "cpp",
         "vector": "cpp",
         "iostream": "cpp",
-    "xstring": "cpp",
-        "sstream": "cpp"
+        "xstring": "cpp",
+        "sstream": "cpp",
+        "xlocale": "cpp"
     },
 
     "editor.minimap.enabled": false
