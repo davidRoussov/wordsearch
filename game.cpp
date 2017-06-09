@@ -1,16 +1,29 @@
 #include <SDL.h>
 #include <iostream>
 #include <SDL_ttf.h>
+#include <fstream>
+#include <vector>
+#include <typeinfo>
+#include <sstream>
+#include <string>
+#include <ctime>
+#include "InitializeBoard.h"
 
 using namespace std;
 
 const int SCREEN_WIDTH = 800;
 const int SCREEN_HEIGHT = 800;
+const int GRID_SIZE = 10;
+const int GRID_PADDING = 100;
+const int GRID_UNIT_LENGTH = (SCREEN_WIDTH - GRID_PADDING * 2) / GRID_SIZE;
+const int NUMBER_SPECIAL_WORDS = 3;
 
 SDL_Window* gWindow = NULL;
 SDL_Renderer* gRenderer = NULL;
+TTF_Font* Sans;
 
 bool quit = false;
+char **board;
 
 bool init()
 {
@@ -43,6 +56,9 @@ bool init()
                 cout << "SDL_ttf could not initialize! SDL_ttf error: " << TTF_GetError() << endl;
                 success = false;
             }
+            else {
+                Sans = TTF_OpenFont("OpenSans-Regular.ttf", 100); 
+            }
 		}
 	}
 
@@ -60,19 +76,43 @@ void close()
     SDL_Quit();
 }
 
+void printLetter(int x, int y, char letter)
+{
+    const char *const_char_letter = &letter;
+
+    SDL_Color Color = {0, 0, 0};
+    SDL_Surface* surfaceMessage = TTF_RenderText_Blended(Sans, const_char_letter, Color);
+    SDL_Texture* message = SDL_CreateTextureFromSurface(gRenderer, surfaceMessage);
+    SDL_Rect Message_rect;
+    Message_rect.x = x; 
+    Message_rect.y = y; 
+    Message_rect.w = GRID_UNIT_LENGTH;
+    Message_rect.h = GRID_UNIT_LENGTH; 
+    SDL_RenderCopy(gRenderer, message, NULL, &Message_rect);
+    
+    SDL_FreeSurface(surfaceMessage);
+    SDL_DestroyTexture(message);
+}
+
 void draw()
 {
-    TTF_Font* Sans = TTF_OpenFont("OpenSans-Regular.ttf", 100); 
-    SDL_Color White = {0, 0, 0};
-    SDL_Surface* surfaceMessage = TTF_RenderText_Blended(Sans, "G", White);
-    SDL_Texture* Message = SDL_CreateTextureFromSurface(gRenderer, surfaceMessage);
-    SDL_Rect Message_rect; //create a rect
-    Message_rect.x = 0; 
-    Message_rect.y = 0; 
-    Message_rect.w = 40;
-    Message_rect.h = 30; 
-    SDL_RenderCopy(gRenderer, Message, NULL, &Message_rect);
-    SDL_FreeSurface(surfaceMessage);
+    int x = GRID_PADDING;
+    int y = GRID_PADDING;
+
+    for (int i = 0; i < GRID_SIZE; i++)
+    {
+        for (int j = 0; j < GRID_SIZE; j++)
+        {
+            char letter = board[i][j];
+
+            printLetter(x, y, letter);
+
+            x += GRID_UNIT_LENGTH;
+        }
+
+        x = GRID_PADDING;
+        y += GRID_UNIT_LENGTH;
+    }
 }
 
 int main(int argc, char *argv[])
@@ -84,6 +124,23 @@ int main(int argc, char *argv[])
     }
     else
     {
+
+
+
+
+        InitializeBoard *board_initializer = new InitializeBoard(NUMBER_SPECIAL_WORDS, GRID_SIZE);
+        board = board_initializer->generate();
+        return 0;
+
+
+
+
+
+
+
+
+        
+
         while (!quit) {
             SDL_Event event;
             while (SDL_PollEvent(&event))
